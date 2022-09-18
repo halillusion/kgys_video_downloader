@@ -201,7 +201,7 @@ if (isset($_GET['video-download']) === false) {
       <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Home</span>
+            <a class="nav-link active" href="/">Home</span>
             </a>
           </li>
           <li class="nav-item">
