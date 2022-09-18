@@ -41,7 +41,8 @@ function slug($text)
   return $text;
 }
 
-function clearSpaces($text) {
+function clearSpaces($text)
+{
   return trim(preg_replace('/\s+/u', ' ', strip_tags($text)));
 }
 mb_language('uni');
@@ -60,7 +61,7 @@ if (isset($_GET['video-download']) === false) {
     $key = 'Tarihsiz';
     foreach ($td as $tdcontent) {
       $content = $doc->saveHTML($tdcontent);
-      
+
 
       if (clearSpaces($content) === '') {
         continue;
@@ -90,7 +91,6 @@ if (isset($_GET['video-download']) === false) {
       $links[$key] = $link;
     }
   }
-
 } else {
 
   $file = $_GET['video-download'];
@@ -113,8 +113,17 @@ if (isset($_GET['video-download']) === false) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KGYS Video Downloader</title>
+  <meta name="author" content="@halillusion">
+  <meta name="description" content="This project allows you to download grouped accident videos recorded by KGYS. Its allows you to download accident videos reflected on traffic cameras from KGYS.">
   <link href="https://bootswatch.com/5/cyborg/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <style>
+    body {
+      font-family: 'Mulish', sans-serif;
+    }
+
     .date-list {
       display: grid;
       grid-template-columns: auto auto auto;
@@ -123,11 +132,14 @@ if (isset($_GET['video-download']) === false) {
 
     .date-list .btn {
       margin: 0.2rem;
+      font-size: 0.7rem;
     }
 
     .list-group {
       max-height: 65vh;
       overflow-y: auto;
+      border-radius: 0.5rem;
+      padding-right: 0.3rem;
     }
 
     .btn-light.active {
@@ -140,6 +152,41 @@ if (isset($_GET['video-download']) === false) {
 
     a.disabled[data-download] .spinner-border {
       display: inline-block;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #222;
+      border-radius: 0.6rem;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      border-radius: 0.6rem;
+      margin: 0.2rem;
+      background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    @media (max-width: 1200px) {
+      .date-list {
+        grid-template-columns: auto auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .date-list {
+        grid-template-columns: auto;
+      }
     }
   </style>
 </head>
@@ -170,7 +217,8 @@ if (isset($_GET['video-download']) === false) {
         <div class="col-12">
           <div class="text-center">
             <h1>KGYS Video Downloader</h1>
-            <p>It allows you to download accident videos reflected on traffic cameras from KGYS.</p>
+            <p class="mb-0">This project allows you to download grouped accident videos recorded by KGYS.</p>
+            <p>Its allows you to download accident videos reflected on traffic cameras from KGYS.</p>
           </div>
         </div>
         <?php
@@ -195,7 +243,7 @@ if (isset($_GET['video-download']) === false) {
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Download All
                   </a>
-                  <div class="list-group list-group-flush rounded">';
+                  <div class="list-group list-group-flush">';
                 foreach ($value as $value) {
                   echo '<a href="' . KGYS_BASE_URL . $value['url'] . '" data-name="' . slug($key . '-' . $value['title']) . '" class="list-group-item list-group-item-action" target="_blank">' . $value['title'] . '</a>';
                 }
@@ -208,7 +256,8 @@ if (isset($_GET['video-download']) === false) {
         } else {
           echo '<p class="text-danger">No videos found.</p>';
         } ?>
-          </div>
+      </div>
+    </div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -223,6 +272,7 @@ if (isset($_GET['video-download']) === false) {
           const downloadList = document.querySelectorAll(`#${listId} .list-group .list-group-item`);
 
           for (const listItem of downloadList) {
+            listItem.scrollIntoView();
             await downloadUsingFetch(listItem);
           }
           e.target.classList.remove('disabled');
@@ -268,6 +318,14 @@ if (isset($_GET['video-download']) === false) {
         resolve();
       });
     }
+
+    const tabEl = document.querySelectorAll('.date-list [data-bs-toggle="tab"]')
+    const list = [...tabEl].map((el) => {
+      el.addEventListener('shown.bs.tab', e => {
+        document.getElementById("listTabContent").scrollIntoView();
+        // console.log(e.target.getAttribute())
+      });
+    });
   </script>
 </body>
 
