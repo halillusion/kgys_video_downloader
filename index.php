@@ -44,7 +44,7 @@ function slug($text)
 function clearSpaces($text) {
   return trim(preg_replace('/\s+/u', ' ', strip_tags($text)));
 }
-mb_language('uni');
+// mb_language('uni');
 mb_internal_encoding('UTF-8');
 
 if (isset($_GET['video-download']) === false) {
